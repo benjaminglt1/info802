@@ -1,0 +1,9 @@
+#Client de test
+ClientTest/
+
+#Visuel de l'application
+WEB_marketplace/
+
+#Fichiers node inutiles
+package-lock.json
+node_modules/
