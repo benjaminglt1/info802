@@ -8,6 +8,8 @@
  * simuler payement -> prix / carte
  */
 var token = [];
+
+//Permet de générer un token pour pouvoir utiliser les differents endpoints de l'api
 function genererToken(){
     var tok;
     var end = false;
@@ -26,6 +28,7 @@ function genererToken(){
 
 }
 
+//Permet de supprimer un token
 function supprToken(tok){
     token.splice(token.indexOf(tok),1);
     return true;
