@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<definitions name = "calcFrais"
+   targetNamespace = "http:/localhost:8080/wsdl/calcFrais.wsdl"
+   xmlns = "http://schemas.xmlsoap.org/wsdl/"
+   xmlns:soap = "http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:tns = "http://localhost:8080/wsdl/calcFrais.wsdl"
+   xmlns:xsd = "http://www.w3.org/2001/XMLSchema">
+
+   <message name = "calcRequest">
+      <part name = "poid" type = "xsd:integer"/>
+      <part name = "distance" type = "xsd:integer"/>
+   </message>
+   <message name = "calcResponse">
+      <part name = "resultat" type = "xsd:integer"/>
+   </message>
+   <portType name = "port">
+      <operation name = "calc">
+         <input message = "tns:calcRequest"/>
+         <output message = "tns:calcResponse"/>
+      </operation>
+   </portType>
+
+   <binding name = "calc_Binding" type = "tns:port">
+      <soap:binding style = "rpc"
+         transport = "http://schemas.xmlsoap.org/soap/http"/>
+      <operation name = "calc">
+         <soap:operation soapAction = "calc"/>
+         <input>
+            <soap:body encodingStyle = "http://schemas.xmlsoap.org/soap/encoding/" namespace = "urn:examples:calcFrais" use = "encoded"/>
+         </input>
+         <output>
+            <soap:body encodingStyle = "http://schemas.xmlsoap.org/soap/encoding/" namespace = "urn:examples:calcFrais" use = "encoded"/>
+         </output>
+      </operation>
+   </binding>
+
+   <service name = "calcFrais">
+      <documentation>WSDL File for calcFrais</documentation>
+      <port binding = "tns:calc_Binding" name = "port">
+         <soap:address
+            location = "http://localhost:8080/wsdl?wsdl/calc/" />
+      </port>
+   </service>
+
+</definitions>
