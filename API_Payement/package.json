@@ -1,0 +1,11 @@
+{
+    "name": "API Payement",
+    "version": "0.0.1",
+    "description": "Api pour la simulation du payement",
+    "scripts": {
+        "start": "node ./serveurRest.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}

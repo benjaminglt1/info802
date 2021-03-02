@@ -1,0 +1,13 @@
+[
+    {
+        "nom": "Marketplace 1",
+        "login": "M1",
+        "mdp": "M1",
+        "token": ""
+    },{
+        "nom": "Marketplace 2",
+        "login": "M2",
+        "mdp": "M2",
+        "token": ""
+    }
+]
