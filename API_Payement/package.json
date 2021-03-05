@@ -6,6 +6,7 @@
         "start": "node ./serveurRest.js"
     },
     "dependencies": {
+        "@supercharge/strings": "^1.18.0",
         "express": "^4.17.1"
     }
 }

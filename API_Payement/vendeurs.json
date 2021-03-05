@@ -2,12 +2,10 @@
     {
         "nom": "Marketplace 1",
         "login": "M1",
-        "mdp": "M1",
-        "token": ""
+        "mdp": "M1"
     },{
         "nom": "Marketplace 2",
         "login": "M2",
-        "mdp": "M2",
-        "token": ""
+        "mdp": "M2"
     }
 ]
