@@ -1,12 +1,16 @@
 {
-    "name": "API Payement",
+    "name": "APIPayement",
     "version": "0.0.1",
     "description": "Api pour la simulation du payement",
+    "main": "serveurRest.js",
     "scripts": {
         "start": "node ./serveurRest.js"
     },
     "dependencies": {
         "@supercharge/strings": "^1.18.0",
         "express": "^4.17.1"
+    },
+    "engines": {
+        "node": "14.15.0"
     }
 }

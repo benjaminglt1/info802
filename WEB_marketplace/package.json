@@ -2,7 +2,13 @@
     "name": "clientMarket",
     "version": "0.0.1",
     "description": "client du marketplace",
+    "scripts": {
+        "start": "node ./serveur.js"
+    },
     "dependencies": {
         "express": "^4.17.1"
+    },
+    "engines": {
+        "node": "14.15.0"
     }
 }

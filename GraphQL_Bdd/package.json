@@ -1,7 +1,7 @@
 {
-    "name": "td3",
+    "name": "graphql",
     "version": "0.0.1",
-    "description": "",
+    "description": "Serveur graphQL",
     "scripts": {
         "start": "node ./serveur.js"
     },
@@ -11,5 +11,8 @@
         "firebase": "^8.2.4",
         "graphql": "^15.4.0",
         "graphql-request": "^3.4.0"
+    },
+    "engines": {
+        "node": "14.15.0"
     }
 }
