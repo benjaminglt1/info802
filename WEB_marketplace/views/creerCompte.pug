@@ -1,0 +1,32 @@
+html
+    head 
+        title= "Créer un compte" 
+
+    body   
+        form(action="/creer", method="post")
+            label(for="log")= "Identifiant :"
+            input(type="text", name="log", id="log")
+
+            label(for="pass")= "Mot de passe :"
+            input(type="password", name="pass", id="pass")   
+
+            label(for="nom")= "Nom :"
+            input(type="text", name="nom", id="nom")
+            label(for="pnom")= "Prénom :"
+            input(type="text", name="pnom", id="pnom")
+
+            label(for="vendeur")= "Compte Vendeur ?"
+            label(for="true")= "oui"
+            input(type="radio", name="vendeur", id="true", value="true", onclick="document.getElementById('ifVendeur').style.display = 'block';")
+            label(for="false")= "non"   
+            input(type="radio", name="vendeur", id="false", value="false", onclick="document.getElementById('ifVendeur').style.display = 'none';")
+
+            div(id="ifVendeur", style="display: none;")
+                label(for="nomBoutique")= "Nom de la boutique :"
+                input(type="text", name="nomBoutique", id="nomBoutique")
+
+            input(type="submit", value="Créer mon compte")
+
+
+            footer 
+                p= "&copy; 2021 - Gallet Benjamin"

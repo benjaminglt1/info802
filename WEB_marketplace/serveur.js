@@ -25,7 +25,7 @@ app.post("/connexion",(req, res) => {
             //passer à la suite
 
         //sinon retourner vers connexion
-    produits = []
+    var produits = ["a","b","c"];
 
     //appel graphql pour récuperer l'ensemble des produits puis renvoie vers l'accueil pour les afficher
     res.render('accueil', {produits: produits});
@@ -58,8 +58,29 @@ app.get("/prod",(req, res) => {
     res.render('produit', {nomProduit: "ordinateur", prixProduit: "10",poidProduit: "5", idProduit:"0",url: "https://image.darty.com/informatique/ordinateur_portable-portable/portable/asus_s712fa-au391i7_8_12_s1911144741366A_104842555.jpg"});
 });
 
+app.post("/commander",(req, res) => {
+    //recup elements requete
+    console.log(req.body)
+
+    //calculer le prix de livraison via le service soap
+
+    //renvoyer vers le recap pré payement
+    res.render('commande', {nomProduit: "ordinateur", prix: "10",poid: "5", qte:"5",prixLivraison:"40"});
+});
+
+app.post("/payement",(req, res) => {
+    //recup elements requete (prix total)
+    console.log(req.body)
+
+    //recup carte api rest
+    var cartes = [["id","a"],["id","b"]];
+    console.log(cartes.length)
+
+    //renvoyer vers le recap pré payement
+    res.render('payement', {prix: "90", cartes: cartes});
+});
+
 
 app.listen(port,function (){
     console.log("Le serveur tourne sur http://localhost:"+port);
 });
-

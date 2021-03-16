@@ -1,0 +1,24 @@
+html 
+    head 
+        title= "Payement"
+    
+    body
+        h1= "Payement"
+        h2= "Vos cartes enregistrées"
+        ul
+            each carte in cartes
+                div(id=carte)
+                        li= carte
+
+        button(onclick="")= "Utiliser une autre carte"
+        div(id="")
+            form(action="/payer", method="post")
+                label(for="numCarte")= "Numéro de carte"
+                input(id="numCarte", type="tel", inputmode="numeric", pattern="[0-9\s]{16}", maxlength="16", placeholder="xxxx xxxx xxxx xxxx")                
+                
+                label(for="dateExpire")= "Date d'expiration"
+                input(type="month", name="dateExpire", id="dateExpire")
+
+                label(for="cvv")= "CVV"
+                input(id="cvv", type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")                
+                input(type="submit", value="Payer")

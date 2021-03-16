@@ -1,0 +1,19 @@
+html 
+    head 
+        title= "Validation de la commande" 
+    
+    body
+        
+        h1= nomProduit 
+        h2= "Quantité : " + qte
+        h2= "Prix Final : "+(parseInt(prix)*parseInt(qte)+parseInt(prixLivraison)) + " €"
+        h2= "Détails du prix"  
+        ul 
+            li
+                h3= "Prix des produits : " + (prix*qte) + " €"
+            li
+                h3= "Prix de la livraison : " + prixLivraison + " €"
+
+        form(action="/payement", method="post")
+            input(type="submit", value="Procéder au payement") 
+        

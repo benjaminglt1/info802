@@ -1,0 +1,16 @@
+html
+    head 
+        title= "Connexion" 
+
+    body   
+        form(action="/connexion", method="post")
+            label(for="log")= "Identifiant :"
+            input(type="text", name="log", id="log")
+            label(for="pass")= "Mot de passe :"
+            input(type="password", name="pass", id="pass")    
+            input(type="submit", value="Se connecter")
+        p= "Si vous n'avez pas de compte :"
+        a(href="/creerCompte")= "Créer un compte" 
+
+        footer 
+            p= "&copy; 2021 - Gallet Benjamin"

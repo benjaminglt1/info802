@@ -1,0 +1,19 @@
+html
+    head 
+        title= title 
+
+    body 
+        header 
+            p= nomClient
+            form(action="/deconnexion", method="get") 
+                input(type="submit", value="Se déconnecter")  
+            a(href="")= "Voir mes transactions"
+            a(href="")= "Modifier carte de paiement"   
+        h1= "Liste des produits :"
+        br
+        each prod in produits
+            div(id=prod) 
+                a(href="/prod?id="+prod)=prod 
+
+        footer
+            p= "&copy; 2021 - Gallet Benjamin"

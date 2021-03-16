@@ -1,0 +1,23 @@
+html 
+    head 
+        title= nomProduit 
+    
+    body
+        form(action="/commander", method="post")
+            h1= nomProduit
+            p= "Ref : "+ idProduit
+            img(src=url, alt="image du produit")
+            p= "Poid unitaire :" + poidProduit + " Kg"
+            p= "Prix unitaire : " + prixProduit + " €"
+            label(for="qte")= "Quantité :"
+            input(type="number", value="0", name="qte", id="qte", min="1", onclick="document.getElementById('poidt').innerHTML = 'Poid total : ' + ((document.getElementById('qte').value)*"+poidProduit+")+ ' Kg';document.getElementById('prixt').innerHTML = 'Prix (sans livraison) : ' + ((document.getElementById('qte').value)*"+prixProduit+")+ ' €';")
+            p(id="poidt")= ""
+            p(id="prixt")= "" 
+            
+            button(onclick="document.getElementById('calculLivraison').style.display='block';document.getElementById('sub').style.display='block';")= "Etape suivante"
+
+            div(id="calculLivraison", style="display: none;")
+                label(for="distance")="Distance de livraison (en km)"
+                input(type="number", name="distance", id="distance", min="1", value="0")  
+            input(type="submit", id="sub", value="Calculer le prix final",style="display: none;")
+             
