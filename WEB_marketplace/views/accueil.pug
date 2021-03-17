@@ -8,8 +8,9 @@ html
             p= nomClient
             form(action="/deconnexion", method="get") 
                 input(type="submit", value="Se déconnecter")  
-            a(href="")= "Voir mes transactions"
-            a(href="")= "Modifier carte de paiement"
+            a(href="/accueil")= "Accueil" 
+            a(href="/transactions")= "Voir mes transactions"
+            a(href="/cartes")= "Modifier carte de paiement"
             if client['vendeur'] == true
                 a(href="")= "Modifier vos produits"
                 

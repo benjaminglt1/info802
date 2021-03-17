@@ -41,7 +41,7 @@ var schema = buildSchema(`
     type Mutation {
         ajouterProduit(nom:String!,prix:String!,poid:String!,photo:String!): Boolean
         supprimerProduit(id:String!): Boolean
-        ajouterClient(nom:String!,prenom:String!,login: String!,mdp: String!,vendeur: Boolean!): Boolean
+        ajouterClient(nom:String!,prenom:String!,login: String!,mdp: String!,vendeur: Boolean!): String
         supprimerClient(id:String!): Boolean
     }
 `);
@@ -126,7 +126,7 @@ var root = {
         updates['/utilisateurs/'+newPostKey] = postData;
         
         return firebase.database().ref().update(updates).then(() => {
-            return true
+            return newPostKey
         });
     },
     supprimerClient(arg) {

@@ -3,11 +3,12 @@ var app = express();
 var port = process.env.PORT || 3000;
 var path = require('path');
 var soap = require('soap');
-var soapUrl = "https://benjamingltsoap.herokuapp.com/wsdl?wsdl"
-var graphqlUrl = "https://benjamingltgraphql.herokuapp.com/graphql"
+var soapUrl = "https://benjamingltsoap.herokuapp.com/wsdl?wsdl";
+var graphqlUrl = "https://benjamingltgraphql.herokuapp.com/graphql";
+var axios = require('axios')
+var restUrl = "https://benjamingltrestapi.herokuapp.com/api";
 var { request, gql } = require('graphql-request')
 
-var token;
 var variables = {};
 var options = { 
     root: path.join(__dirname) 
@@ -24,6 +25,84 @@ app.get("/",(req, res) => {
 
 app.get("/creerCompte",(req, res) => {
     res.render('creerCompte');
+});
+
+app.get("/transactions",(req, res) => {
+    //récup des transacrtions du client courant
+    axios.get(restUrl+'/client/'+variables.clientCourant['id']+'/operations', 
+    {
+        headers:{
+            token: variables.token
+        }
+    })
+    .then(resultat => {
+        console.log(`statusCode: ${resultat.statusCode}`)
+        console.log(resultat.data);
+        res.render('transactions', {operations: resultat.data});
+    })
+    .catch(error => {
+        console.error(error)
+    });
+});
+
+app.get("/cartes",(req, res) => {
+    //récup des transacrtions du client courant
+    axios.get(restUrl+'/client/'+variables.clientCourant['id']+'/voirCartes', 
+    {
+        headers:{
+            token: variables.token
+        }
+    })
+    .then(resultat => {
+        console.log(`statusCode: ${resultat.statusCode}`)
+        console.log(resultat.data);
+        variables.cartes = resultat.data
+        res.render('cartes', {cartes: resultat.data});
+    })
+    .catch(error => {
+        console.error(error)
+    });
+});
+
+app.post("/ajoutCarte",(req, res) => {
+    //récup des transacrtions du client courant
+    axios.post(restUrl+'/client/'+variables.clientCourant["id"]+'/ajouterCarte', 
+    {
+        nom:req.body.nomCarte,
+        numero: req.body.numCarte,
+        validite: req.body.dateExpire,
+        cvv: req.body.cvv
+  },{
+    headers:{
+        token: variables.token
+    }
+})
+  .then(resultat => {
+    console.log(`statusCode: ${resultat.statusCode}`)
+    console.log(resultat);
+    res.redirect("/cartes")
+  })
+  .catch(error => {
+    console.error(error)
+  })
+});
+
+app.get("/supprimerCarte/:num",(req, res) => {
+    //récup des transacrtions du client courant
+    axios.delete(restUrl+'/client/'+variables.clientCourant["id"]+'/supprimerCarte/'+req.params.num, 
+    {
+        headers:{
+            token: variables.token
+        }
+    })
+  .then(resultat => {
+    console.log(`statusCode: ${resultat.statusCode}`)
+    console.log(resultat);
+    res.redirect("/cartes")
+  })
+  .catch(error => {
+    console.error(error)
+  })
 });
 
 app.post("/connexion",(req, res) => {
@@ -63,8 +142,24 @@ app.post("/connexion",(req, res) => {
                 request(graphqlUrl, query).then((data) => {
                     variables.produits = data["getProduits"];
                     console.log(variables.produits);
+                    //recupération du token pour l'api
+                    axios.post(restUrl+'/login', 
+                    {
+                        login: "logMarket",
+                        pass: "mdpMarket"
+                    })
+                    .then(resultat => {
+                        console.log(`statusCode: ${resultat.statusCode}`)
+                        console.log(JSON.parse(resultat.data).token);
+                        variables.token = JSON.parse(resultat.data).token;
 
-                    res.render('accueil', {produits: variables.produits,client: variables.clientCourant});
+                        //Infos récupérée on peut afficher la page d'accueil
+                        res.render('accueil', {produits: variables.produits,client: variables.clientCourant});
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+                    
                 }); 
             }
         }
@@ -74,14 +169,10 @@ app.post("/connexion",(req, res) => {
             res.render('connexion',{erreur: "Mauvais identifiants"});
         }
     });
-       
-            
-            
+});
 
-        
-
-    
-    
+app.get("/accueil",(req, res) => {
+    res.render('accueil', {produits: variables.produits,client: variables.clientCourant});
 });
 
 app.post("/creer",(req, res) => {
@@ -101,12 +192,34 @@ app.post("/creer",(req, res) => {
     }`
     request(graphqlUrl, mutation).then((data) => {
         console.log(data);
+        if(!vendeur){
+            //ajouter si client à l'api
+            axios.post(restUrl+'/client', 
+            {
+                id: data['ajouterClient'],
+                carte:[],
+                operations:[]
+            },{
+                headers: {
+                token: variables.token,
+                }
+            })
+            .then(resultat => {
+                console.log(`statusCode: ${resultat.statusCode}`)
+                    console.log(resultat);
+            })
+            .catch(error => {
+                console.error(error)
+            })
+        }else{
+            //ajouter si vendeur à l'api
+            var boutique = req.body.nomBoutique
+        }
     })
 
-    //ajouter si client à l'api
+    
 
-    //ajouter si vendeur à l'api
-
+    
     //renvoyer vers la page de connexion
     res.render('connexion');
 });
@@ -115,6 +228,22 @@ app.get("/deconnexion",(req, res) => {
     //supprimer client courant
 
     //déco api
+    axios.get(restUrl+'/logout', 
+    {
+    },{
+        headers:{
+        token: variables.token
+        }
+    })
+    .then(resultat => {
+        console.log(`statusCode: ${resultat.statusCode}`)
+        console.log(JSON.parse(resultat.data).token);
+        variables.token = JSON.parse(resultat.data).token;
+    })
+    .catch(error => {
+        console.error(error)
+    });
+
     res.render('connexion');
 });
 
@@ -165,6 +294,8 @@ app.post("/commander",(req, res) => {
 				} else {
 					console.log("[LOG] Requête réussie\n Résultat = "+rep.resultat);
 					//renvoyer vers le recap pré payement
+                    variables.qte = qte;
+                    variables.prixTotal = parseInt(variables.produitCourant["prix"])*parseInt(qte)+parseInt(rep.resultat);
                     res.render('commande', {nomProduit: variables.produitCourant["nom"], prix: variables.produitCourant["prix"],poid: variables.produitCourant["poid"], qte: qte,prixLivraison:rep.resultat});
 
 				}
@@ -180,14 +311,70 @@ app.post("/payement",(req, res) => {
     console.log(req.body)
 
     //recup carte api rest
-    var cartes = [["id","a"],["id","b"]];
-    console.log(cartes.length)
+    axios.get(restUrl+'/client/'+variables.clientCourant['id']+'/voirCartes', 
+    {
+        headers:{
+            token: variables.token
+        }
+    })
+    .then(resultat => {
+        console.log(`statusCode: ${resultat.statusCode}`)
+        console.log(resultat.data);
+        variables.cartes = resultat.data;
 
-    //renvoyer vers le recap pré payement
-    res.render('payement', {prix: "90", cartes: cartes});
+        //renvoyer vers le recap pré payement
+        res.render('payement', {prix: "90", cartes: variables.cartes});
+    })
+    .catch(error => {
+        console.error(error)
+    });  
 });
 
+app.post("/payer",(req, res) => {
+    
+    axios.post(restUrl+'/simPayement/'+variables.clientCourant['id'], 
+    {
+        date: date(),
+        montant: variables.prixTotal,
+        produit: variables.produitCourant["nom"],
+        qte: variables.qte,
+        carte: req.body.carte,
+        crediteur: "marketplace"
+    },{
+        headers:{
+            token: variables.token
+        }
+    })
+  .then(resultat => {
+    res.redirect('/transactions');
+  })
+  .catch(error => {
+    console.error(error)
+  })
+    
+});
 
 app.listen(port,function (){
     console.log("Le serveur tourne sur http://localhost:"+port);
 });
+
+
+function date(){
+    let date_ob = new Date();
+
+    let date = ("0" + date_ob.getDate()).slice(-2);
+
+    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+    let year = date_ob.getFullYear();
+
+    let hours = date_ob.getHours();
+
+    let minutes = date_ob.getMinutes();
+
+    let seconds = date_ob.getSeconds();
+
+    console.log(year + "-" + month + "-" + date);
+
+    return date + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+}

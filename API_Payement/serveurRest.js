@@ -45,7 +45,7 @@ app.use(express.json());
 app.post('/api/login', (requete,reponse) => {
     var log = requete.body.login;
     var pass = requete.body.pass;
-    if(vendeurs.indexOf(vendeurs.find(cred=>cred.login===log && cred.mdp===pass))>-1){
+    if("logMarket"===log && "mdpMarket"===pass){
         var tok = genererToken();
         var rep = JSON.stringify({
             status: "ok",
@@ -102,7 +102,7 @@ app.post('/api/client', (requete,reponse) => {
     if(token.indexOf(requete.headers.token)>-1){
         clients.push(requete.body);
 
-        fs.writeFile('clients1.json', JSON.stringify(clients), (err) => {
+        fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
             if (err) {
                 throw err;
             }
@@ -121,7 +121,7 @@ app.post('/api/client/:id/ajouterCarte', (requete,reponse) => {
         var id = parseInt(requete.params.id);
         clients.find(client => client.id === id).carte.push(requete.body);
         
-        fs.writeFile('clients1.json', JSON.stringify(clients), (err) => {
+        fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
             if (err) {
                 throw err;
             }
@@ -138,7 +138,7 @@ app.post('/api/client/:id/ajouterCarte', (requete,reponse) => {
 app.delete('/api/client/:id/supprimerCarte/:nom', (requete,reponse) => {
     if(token.indexOf(requete.headers.token)>-1){
         var id = parseInt(requete.params.id);
-        var num = parseInt(requete.params.nom);
+        var num = requete.params.nom;
         
         var d = clients.find(client => client.id === id).carte.findIndex(c=> c.numero === num);
         console.log(d);
@@ -146,7 +146,7 @@ app.delete('/api/client/:id/supprimerCarte/:nom', (requete,reponse) => {
             clients.find(client => client.id === id).carte.splice(d,1);
         }
         
-        fs.writeFile('clients1.json', JSON.stringify(clients), (err) => {
+        fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
             if (err) {
                 throw err;
             }
@@ -154,6 +154,17 @@ app.delete('/api/client/:id/supprimerCarte/:nom', (requete,reponse) => {
         });
         
         reponse.status(200).json(clients);
+    }else{
+        reponse.status(401).json({"status":"Il faut se connecter"});
+    }
+});
+
+//voir cartes
+app.get('/api/client/:id/voirCartes', (requete,reponse) => {
+    if(token.indexOf(requete.headers.token)>-1){
+        var id = parseInt(requete.params.id);
+        var client = clients.find(client => client.id === id);
+        reponse.status(200).json(client.carte);
     }else{
         reponse.status(401).json({"status":"Il faut se connecter"});
     }
@@ -176,7 +187,7 @@ app.post('/api/simPayement/:idClient', (requete,reponse) => {
         var id = parseInt(requete.params.idClient);
         clients.find(client => client.id === id).operations.push(requete.body);
         
-        fs.writeFile('clients1.json', JSON.stringify(clients), (err) => {
+        fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
             if (err) {
                 throw err;
             }

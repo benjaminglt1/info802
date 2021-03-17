@@ -4,22 +4,25 @@
         "carte":[
             {
                 "nom":"carte 1",
-                "numero":123456789,
-                "validite": [30,12],
-                "cvv": 123
+                "numero":"123456789",
+                "validite": "2022-07",
+                "cvv": "123"
             },
             {
                 "nom":"carte 2",
-                "numero":987654321,
-                "validite": [1,1],
-                "cvv": 999
+                "numero":"987654321",
+                "validite": "2025-12",
+                "cvv": "999"
             }
             
         ],
         "operations":[
             {
                 "date": "05-02-2021 16:33:45",
-                "montant": 130,
+                "montant": 120,
+                "produit": "Souris",
+                "qte": "2",
+                "carte": "carte 1",
                 "crediteur": "marketplace"
             }
         ]

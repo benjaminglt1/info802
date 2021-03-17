@@ -1,0 +1,23 @@
+html 
+    header 
+        title= "Mes transactions"
+    body
+
+        header 
+            p= nomClient
+            form(action="/deconnexion", method="get") 
+                input(type="submit", value="Se déconnecter") 
+            a(href="/accueil")= "Accueil"  
+            a(href="/transactions")= "Voir mes transactions"
+            a(href="/cartes")= "Modifier carte de paiement"
+            if client['vendeur'] == true
+                a(href="")= "Modifier vos produits"
+        
+        each op in operations
+            div.transac
+                h1="Date : "+op["date"]
+                h1="Produit : "+op["produit"]
+                h1="Quantité : "+op["qte"]
+                h1="Montant : "+op["montant"]+" €" 
+                h1="Carte : "+op["carte"]
+                h1="Créditeur : "+op["crediteur"]

@@ -5,20 +5,24 @@ html
     body
         h1= "Payement"
         h2= "Vos cartes enregistrées"
-        ul
+        form(action="/payer", method="post") 
             each carte in cartes
                 div(id=carte)
-                        li= carte
+                    input(id=carte['nom'], value=carte['nom'], type="radio", name="carte", onclick="document.getElementById('cartePerso').style.display='none';")   
+                    label(for=carte['nom'])= carte['nom']                  
+                        
 
-        button(onclick="")= "Utiliser une autre carte"
-        div(id="")
-            form(action="/payer", method="post")
+            input#autre(value="autre", type="radio", name="carte",onclick="document.getElementById('cartePerso').style.display='block';")
+            label(for="autre")= "Utiliser une autre carte"
+            div(id="cartePerso",style="display:none;")
+            
                 label(for="numCarte")= "Numéro de carte"
                 input(id="numCarte", type="tel", inputmode="numeric", pattern="[0-9\s]{16}", maxlength="16", placeholder="xxxx xxxx xxxx xxxx")                
-                
+                    
                 label(for="dateExpire")= "Date d'expiration"
                 input(type="month", name="dateExpire", id="dateExpire")
 
                 label(for="cvv")= "CVV"
-                input(id="cvv", type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")                
-                input(type="submit", value="Payer")
+                input(id="cvv", type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")    
+
+            input(type="submit", value="Payer")

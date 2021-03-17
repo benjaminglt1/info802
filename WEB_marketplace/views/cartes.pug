@@ -1,0 +1,40 @@
+html 
+    header 
+        title= "Mes transactions"
+    body
+
+        header 
+            p= nomClient
+            form(action="/deconnexion", method="get") 
+                input(type="submit", value="Se déconnecter")  
+            a(href="/accueil")= "Accueil" 
+            a(href="/transactions")= "Voir mes transactions"
+            a(href="/cartes")= "Modifier carte de paiement"
+            if client['vendeur'] == true
+                a(href="")= "Modifier vos produits"
+
+        h1= "Vos cartes :"
+        each c in cartes
+            div.carte
+                h1="Nom : "+c["nom"]
+                h1="Numero : "+c["numero"]
+                h1="Validité : "+c["validite"]
+                h1="CVV : "+c["cvv"]
+                form(action="/supprimerCarte/"+c['numero'], method="get")
+                    input(type="submit", value="Supprimer") 
+
+        h1= "Ajouter une nouvelle carte :"
+        form(action="/ajoutCarte", method="post")
+            label(for="nomCarte")= "Nom de la carte"
+            input#nomCarte(type="text", name="nomCarte") 
+
+            label(for="numCarte")= "Numéro de carte"
+            input(id="numCarte", name="numCarte", type="tel", inputmode="numeric", pattern="[0-9\s]{16}", maxlength="16", placeholder="xxxx xxxx xxxx xxxx")                
+                
+            label(for="dateExpire")= "Date d'expiration"
+            input(type="month", name="dateExpire", id="dateExpire")
+
+            label(for="cvv")= "CVV"
+            input(id="cvv",, name="cvv" type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")                
+            
+            input(type="submit", value="Ajouter la carte")
