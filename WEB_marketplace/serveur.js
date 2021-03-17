@@ -86,6 +86,22 @@ app.post("/connexion",(req, res) => {
 
 app.post("/creer",(req, res) => {
     //ajouter le client à la bdd via graphql
+    var nom = req.body.nom;
+    var prenom = req.body.pnom;
+    var login = req.body.log;
+    var pass = req.body.pass;
+    var vendeur = false;
+    if(req.body.vendeur == "true"){
+        vendeur = true;
+    }
+
+    const mutation = gql`
+    mutation {
+        ajouterClient(nom:"`+nom+`",prenom:"`+prenom+`",login:"`+login+`",mdp:"`+pass+`",vendeur:`+vendeur+`)
+    }`
+    request(graphqlUrl, mutation).then((data) => {
+        console.log(data);
+    })
 
     //ajouter si client à l'api
 
