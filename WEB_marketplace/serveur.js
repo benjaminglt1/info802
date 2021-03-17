@@ -1,12 +1,21 @@
 var express = require('express');
 var app = express();
-var port = 8080;
+var port = process.env.PORT || 3000;
 var path = require('path');
+var soap = require('soap');
+var soapUrl = "https://benjamingltsoap.herokuapp.com/wsdl?wsdl"
+var graphqlUrl = "https://benjamingltgraphql.herokuapp.com/graphql"
+var { request, gql } = require('graphql-request')
+
 var token;
+var variables = {};
 var options = { 
     root: path.join(__dirname) 
 };//obtention du path
 app.use(express.static(__dirname));
+app.use(express.json());
+app.use(express.urlencoded());
+
 app.set('view engine', 'pug');
 
 app.get("/",(req, res) => {
@@ -19,16 +28,60 @@ app.get("/creerCompte",(req, res) => {
 
 app.post("/connexion",(req, res) => {
     //verification des info en base -> graphql
-        //si log = log & mdp=pass --> stocker le client comme client courant/connecté
-            //connexion api
-                //stockage token
-            //passer à la suite
+    const query = gql`
+    {
+        getClients{
+		    id
+		    login
+            mdp
+            nom
+            prenom
+            vendeur
+        }
+    }`
+    request(graphqlUrl, query).then((data) => {
+        variables.clients = data["getClients"];
+        console.log(variables.clients);
+    }).then(() => {
+        trouve = false;
+        for(client of variables.clients){
+            //si log = log & mdp=pass --> stocker le client comme client courant/connecté
+            console.log(client)
+            if(client['login'] == req.body.log && client['mdp'] == req.body.pass){
+                trouve = true;
+                variables.clientCourant  = client;
+                //appel graphql pour récuperer l'ensemble des produits puis renvoie vers l'accueil pour les afficher
+                const query = gql`
+                {
+                    getProduits{
+                        id
+                        nom
+                        photo
+                        prix
+                    }
+                }`
+                request(graphqlUrl, query).then((data) => {
+                    variables.produits = data["getProduits"];
+                    console.log(variables.produits);
 
+                    res.render('accueil', {produits: variables.produits,client: variables.clientCourant});
+                }); 
+            }
+        }
+        
         //sinon retourner vers connexion
-    var produits = ["a","b","c"];
+        if(!trouve){
+            res.render('connexion',{erreur: "Mauvais identifiants"});
+        }
+    });
+       
+            
+            
 
-    //appel graphql pour récuperer l'ensemble des produits puis renvoie vers l'accueil pour les afficher
-    res.render('accueil', {produits: produits});
+        
+
+    
+    
 });
 
 app.post("/creer",(req, res) => {
@@ -49,23 +102,61 @@ app.get("/deconnexion",(req, res) => {
     res.render('connexion');
 });
 
-app.get("/prod",(req, res) => {
+app.get("/prod/:id",(req, res) => {
     //recup l'id
+    var id = req.params.id;
 
     //recup les infos produits via l'id
+    const query = gql`
+    {
+        getProduit(id:"`+id+`"){
+		    id
+		    nom
+            photo
+            poid
+            prix
+        }
+    }`
+    request(graphqlUrl, query).then((data) => {
+        variables.produitCourant = data["getProduit"];
+        console.log(variables.produitCourant);
 
-    //déco api
-    res.render('produit', {nomProduit: "ordinateur", prixProduit: "10",poidProduit: "5", idProduit:"0",url: "https://image.darty.com/informatique/ordinateur_portable-portable/portable/asus_s712fa-au391i7_8_12_s1911144741366A_104842555.jpg"});
+        //afficher le produit
+        res.render('produit', {nomProduit: variables.produitCourant['nom'], prixProduit: variables.produitCourant['prix'],poidProduit: variables.produitCourant['poid'], idProduit:id,url: variables.produitCourant['photo']});
+    }); 
 });
 
 app.post("/commander",(req, res) => {
     //recup elements requete
-    console.log(req.body)
+    var qte = req.body.qte;
+	var dist = req.body.distance;
+    console.log(parseInt(qte))
+    console.log(parseInt(variables.produitCourant["poid"]))
+    var poidt = parseInt(qte)*variables.produitCourant["poid"];
+    console.log(dist)
+    console.log(poidt)
 
     //calculer le prix de livraison via le service soap
+    
+	args = {poid:poidt,distance:dist};
+	soap.createClient(soapUrl, function(err, client) {
+		if(err) {
+			console.error(err);
+		}else {
+			client.calc(args, function(err, rep) {
+				if(err) {
+					console.error("[ERREUR] Problème requête vers le serveur :"+err);
+				} else {
+					console.log("[LOG] Requête réussie\n Résultat = "+rep.resultat);
+					//renvoyer vers le recap pré payement
+                    res.render('commande', {nomProduit: variables.produitCourant["nom"], prix: variables.produitCourant["prix"],poid: variables.produitCourant["poid"], qte: qte,prixLivraison:rep.resultat});
 
-    //renvoyer vers le recap pré payement
-    res.render('commande', {nomProduit: "ordinateur", prix: "10",poid: "5", qte:"5",prixLivraison:"40"});
+				}
+        	});
+    	}
+    });
+
+    
 });
 
 app.post("/payement",(req, res) => {

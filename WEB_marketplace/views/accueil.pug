@@ -3,17 +3,24 @@ html
         title= title 
 
     body 
+        
         header 
             p= nomClient
             form(action="/deconnexion", method="get") 
                 input(type="submit", value="Se déconnecter")  
             a(href="")= "Voir mes transactions"
-            a(href="")= "Modifier carte de paiement"   
+            a(href="")= "Modifier carte de paiement"
+            if client['vendeur'] == true
+                a(href="")= "Modifier vos produits"
+                
         h1= "Liste des produits :"
         br
         each prod in produits
-            div(id=prod) 
-                a(href="/prod?id="+prod)=prod 
+            div.produit 
+                a(href="/prod/"+prod['id'])
+                    img(src=prod['photo'], alt="Image du produit manquante")
+                    h2= prod['nom']
+                    h2= prod['prix'] + " €"
 
         footer
             p= "&copy; 2021 - Gallet Benjamin"

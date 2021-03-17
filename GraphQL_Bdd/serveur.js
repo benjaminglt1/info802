@@ -35,6 +35,7 @@ var schema = buildSchema(`
     type Query {
         getProduits: [produit]
         getProduit(id:String!): produit
+        getClients: [client]
         getClient(id:String!): client
     }
     type Mutation {
@@ -64,6 +65,19 @@ var root = {
     getProduit:(arg) => {
         return firebase.database().ref('/produits/'+arg.id).once('value').then((res) => {
             return res.val(); 
+        });
+    },
+    getClients:() => {
+        return firebase.database().ref('/utilisateurs').once('value').then((res) => {
+            var tabRes = []; 
+            res.forEach(function(item) {
+            
+                console.log(item.val());
+                
+                tabRes.push(item.val());
+                
+            }); 
+            return tabRes; 
         });
     },
     getClient:(arg) => {

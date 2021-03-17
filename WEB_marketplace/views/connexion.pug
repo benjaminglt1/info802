@@ -2,7 +2,9 @@ html
     head 
         title= "Connexion" 
 
-    body   
+    body  
+        if erreur  
+            h1= erreur 
         form(action="/connexion", method="post")
             label(for="log")= "Identifiant :"
             input(type="text", name="log", id="log")
