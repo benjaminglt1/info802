@@ -23,6 +23,7 @@ var schema = buildSchema(`
         prix: String
         poid: String
         photo: String
+        vendeur: String
     }
     type client {
         id: String
@@ -34,12 +35,13 @@ var schema = buildSchema(`
     }
     type Query {
         getProduits: [produit]
+        getProduitsVendeur(vendeur:String!): [produit]
         getProduit(id:String!): produit
         getClients: [client]
         getClient(id:String!): client
     }
     type Mutation {
-        ajouterProduit(nom:String!,prix:String!,poid:String!,photo:String!): Boolean
+        ajouterProduit(nom:String!,prix:String!,poid:String!,photo:String!,vendeur:String!): Boolean
         supprimerProduit(id:String!): Boolean
         ajouterClient(nom:String!,prenom:String!,login: String!,mdp: String!,vendeur: Boolean!): String
         supprimerClient(id:String!): Boolean
@@ -57,6 +59,20 @@ var root = {
                 console.log(item.val());
                 
                 tabRes.push(item.val());
+                
+            }); 
+            return tabRes; 
+        });
+    },getProduitsVendeur:(arg) => {
+        return firebase.database().ref('/produits').once('value').then((res) => {
+            var tabRes = []; 
+            res.forEach(function(item) {
+            
+                console.log(item.val());
+                if(item.val().vendeur === arg.vendeur){
+                    tabRes.push(item.val());
+                }
+                
                 
             }); 
             return tabRes; 
@@ -93,7 +109,8 @@ var root = {
             nom: arg.nom,
             photo: arg.photo,
             poid: arg.poid,
-            prix: arg.prix
+            prix: arg.prix,
+            vendeur: arg.vendeur
           };
                 
           // Write the new post's data simultaneously in the posts list and the user's post list.

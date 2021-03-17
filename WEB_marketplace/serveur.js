@@ -27,6 +27,51 @@ app.get("/creerCompte",(req, res) => {
     res.render('creerCompte');
 });
 
+app.post("/ajoutProduit",(req, res) => {
+    var nom = req.body.nom
+    var poid = req.body.poid
+    var prix = req.body.prix
+    var photo = req.body.photo
+    const mutation = gql`
+    mutation {
+        ajouterProduit(nom:"`+nom+`",prix:"`+prix+`",poid:"`+poid+`",photo:"`+photo+`",vendeur:"`+variables.clientCourant['id']+`")
+    }`
+    request(graphqlUrl, mutation).then((data) => {
+        console.log(data);
+        res.redirect('/modifProduits')
+    })
+});
+
+app.get("/supprimerProduit/:id",(req, res) => {
+   var id = req.params.id;
+   const mutation = gql`
+    mutation {
+        supprimerProduit(id:"`+id+`")
+    }`
+    request(graphqlUrl, mutation).then((data) => {
+        console.log(data);
+        res.redirect('/modifProduits')
+    })
+});
+
+app.get("/modifProduits",(req, res) => {
+    const query = gql`
+    {
+        getProduitsVendeur(vendeur:"`+variables.clientCourant['id']+`"){
+		    id
+		    nom
+            photo
+            prix
+            poid
+            vendeur
+        }
+    }`
+    request(graphqlUrl, query).then((data) => {
+        variables.produitsVendeur = data["getProduitsVendeur"];
+        res.render('produitsVendeur', {produits:variables.produitsVendeur,client:variables.clientCourant})
+    })
+});
+
 app.get("/transactions",(req, res) => {
     //récup des transacrtions du client courant
     axios.get(restUrl+'/client/'+variables.clientCourant['id']+'/operations', 
@@ -38,7 +83,7 @@ app.get("/transactions",(req, res) => {
     .then(resultat => {
         console.log(`statusCode: ${resultat.statusCode}`)
         console.log(resultat.data);
-        res.render('transactions', {operations: resultat.data});
+        res.render('transactions', {operations: resultat.data,client:variables.clientCourant});
     })
     .catch(error => {
         console.error(error)
@@ -57,7 +102,7 @@ app.get("/cartes",(req, res) => {
         console.log(`statusCode: ${resultat.statusCode}`)
         console.log(resultat.data);
         variables.cartes = resultat.data
-        res.render('cartes', {cartes: resultat.data});
+        res.render('cartes', {cartes: resultat.data,client:variables.clientCourant});
     })
     .catch(error => {
         console.error(error)
@@ -72,19 +117,19 @@ app.post("/ajoutCarte",(req, res) => {
         numero: req.body.numCarte,
         validite: req.body.dateExpire,
         cvv: req.body.cvv
-  },{
-    headers:{
-        token: variables.token
-    }
-})
-  .then(resultat => {
-    console.log(`statusCode: ${resultat.statusCode}`)
-    console.log(resultat);
-    res.redirect("/cartes")
-  })
-  .catch(error => {
-    console.error(error)
-  })
+    },{
+        headers:{
+            token: variables.token
+        }
+    })
+    .then(resultat => {
+        console.log(`statusCode: ${resultat.statusCode}`)
+        console.log(resultat);
+        res.redirect("/cartes")
+    })
+    .catch(error => {
+        console.error(error)
+    })
 });
 
 app.get("/supprimerCarte/:num",(req, res) => {
@@ -172,7 +217,19 @@ app.post("/connexion",(req, res) => {
 });
 
 app.get("/accueil",(req, res) => {
-    res.render('accueil', {produits: variables.produits,client: variables.clientCourant});
+    const query = gql`
+                {
+                    getProduits{
+                        id
+                        nom
+                        photo
+                        prix
+                    }
+                }`
+    request(graphqlUrl, query).then((data) => {
+        variables.produits = data["getProduits"];
+        res.render('accueil', {produits: variables.produits,client: variables.clientCourant});
+    });
 });
 
 app.post("/creer",(req, res) => {
@@ -267,7 +324,7 @@ app.get("/prod/:id",(req, res) => {
         console.log(variables.produitCourant);
 
         //afficher le produit
-        res.render('produit', {nomProduit: variables.produitCourant['nom'], prixProduit: variables.produitCourant['prix'],poidProduit: variables.produitCourant['poid'], idProduit:id,url: variables.produitCourant['photo']});
+        res.render('produit', {nomProduit: variables.produitCourant['nom'], prixProduit: variables.produitCourant['prix'],poidProduit: variables.produitCourant['poid'], idProduit:id,url: variables.produitCourant['photo'],client:variables.clientCourant});
     }); 
 });
 
@@ -296,7 +353,7 @@ app.post("/commander",(req, res) => {
 					//renvoyer vers le recap pré payement
                     variables.qte = qte;
                     variables.prixTotal = parseInt(variables.produitCourant["prix"])*parseInt(qte)+parseInt(rep.resultat);
-                    res.render('commande', {nomProduit: variables.produitCourant["nom"], prix: variables.produitCourant["prix"],poid: variables.produitCourant["poid"], qte: qte,prixLivraison:rep.resultat});
+                    res.render('commande', {nomProduit: variables.produitCourant["nom"], prix: variables.produitCourant["prix"],poid: variables.produitCourant["poid"], qte: qte,prixLivraison:rep.resultat,client:variables.clientCourant});
 
 				}
         	});
@@ -323,7 +380,7 @@ app.post("/payement",(req, res) => {
         variables.cartes = resultat.data;
 
         //renvoyer vers le recap pré payement
-        res.render('payement', {prix: "90", cartes: variables.cartes});
+        res.render('payement', {prix: "90", cartes: variables.cartes,client:variables.clientCourant});
     })
     .catch(error => {
         console.error(error)

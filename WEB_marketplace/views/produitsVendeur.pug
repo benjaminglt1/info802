@@ -1,0 +1,41 @@
+html 
+    header 
+        title= "Mes transactions"
+    body
+
+        header 
+            p= nomClient
+            form(action="/deconnexion", method="get") 
+                input(type="submit", value="Se déconnecter")  
+            a(href="/accueil")= "Accueil" 
+            a(href="/transactions")= "Voir mes transactions"
+            a(href="/cartes")= "Modifier carte de paiement"
+            if client['vendeur'] == true
+                a(href="")= "Modifier vos produits"
+
+        h1= "Vos Produits :"
+        each p in produits
+            div.prod
+                h1="Nom : "+p["nom"]
+                h1="Photo : "+p["photo"]
+                h1="Poid : "+p["poid"]
+                h1="Prix : "+p["prix"]
+                form(action="/supprimerProduit/"+p['id'], method="get")
+                    input(type="submit", value="Supprimer") 
+
+        h1= "Ajouter un nouveau produit :"
+        form(action="/ajoutProduit", method="post")
+            label(for="nom")= "Nom du produit"
+            input#nom(type="text", name="nom") 
+
+            label(for="photo")= "Photo :"
+            input#photo(type="text", name="photo")
+
+            label(for="poid")= "Poid : "
+            input#poid(type="text", name="poid")  
+
+            label(for="prix")= "Prix : "
+            input#nom(type="text", name="prix") 
+                         
+            
+            input(type="submit", value="Ajouter le produit")
