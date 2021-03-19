@@ -1,3 +1,103 @@
+/**
+ * # Documentation site web
+ * 
+ * ## Utilisation du service soap
+ * 
+ * ```javascript
+ *  var soap = require('soap');
+ * 
+ *  // On met dans un tableau les argument nécessaire à la requête
+ *  args = {poid:poidt,distance:dist};
+ *  
+ *      // On crée un client soap avec l'url de notre service
+ *      soap.createClient(soapUrl, function(err, client) {
+ *		    if(err) {
+ *			    console.error(err);
+ *		    }else {
+ *
+ *              // Avec le client on va appeler la fonction soap voulu et lui passer les arguments si elle en a
+ *              // on recoit ensuite le résultat de l'appel ou une erreur si la fonction n'est pas définie par exemple
+ *			    client.calc(args, function(err, rep) {
+ *				    if(err) {
+ *					    console.error("[ERREUR] Problème requête vers le serveur :"+err);
+ *				    }else{
+ *					    console.log("[LOG] Requête réussie\n Résultat = "+rep.resultat);
+ *				    }
+ *      	    });
+ *          }
+ *      });
+ * ```
+ * 
+ * ## Utilisation du service graphQL
+ * Utilisation du package graphql-request pour communiquer avec notre service 
+ * 
+ * ```javascript
+ *  var { request, gql } = require('graphql-request')
+ * ```
+ * 
+ * ### Query
+ * ```javascript
+ *  // On construit une requete avec l'une des fonctions du Schema défini par le service graphQL
+ *  const query = gql`
+ *  {
+ *      getProduitsVendeur(vendeur:"`+variables.clientCourant['id']+`"){
+ *		    id
+ *		    nom
+ *          photo
+ *          prix
+ *          poid
+ *          vendeur
+ *      }
+ *  }`
+ * 
+ *  // on execute la requête en passant en paramètre l'url du service et la requête
+ *  request(graphqlUrl, query).then((data) => {
+ *      //on obtient alors le résultat de la requete dans la variable data
+ *      variables.produitsVendeur = data["getProduitsVendeur"];
+ *  })
+ * ```
+ * 
+ * ### Mutation
+ * 
+ * De la même manièrre que pour le requête on va dans un premier temps créer notre mutation qui sera dans un second temps executée via la request graphQL 
+ * 
+ * ```javascript
+ *  const mutation = gql`
+ *       mutation {
+ *           ajouterProduit(nom:"nom",prix:"prix",poid:"poid",photo:"url_photo",vendeur:"booléen")
+ *      }`
+ *  request(graphqlUrl, mutation).then((data) => {
+ *      console.log(data);
+ *  })
+ * ```
+ * 
+ * ## Utilisation de l'api rest
+ * 
+ * Utilisation du package axios qui permet l'envoi/reception de requête http
+ *  ```javascript
+ *  // Pour effectuer une requête post on utilise axios.post(<endpoint api>,{<body>},{<headers>});
+ *  axios.post(restUrl+'/client', 
+ *      {
+ *          id: data['ajouterClient'],
+ *          carte:[],
+ *          operations:[]
+ *      },{
+ *          headers: {
+ *              token: variables.token,
+ *          }
+ *      })
+ *      .then(resultat => {
+ *          // on récupère le résultat de la requête dans la variable resultat
+ *      })
+ *      .catch(error => {
+ *          // on recupère l'erreur dans la variable error
+ *      });
+ * ```
+ * 
+ * ## Utilisation du site
+ * 
+ */
+
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 3000;

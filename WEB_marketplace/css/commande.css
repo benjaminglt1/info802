@@ -1,0 +1,11 @@
+.corp{
+    margin-left: 5vw;
+}
+
+.corp > form > input[type="submit"] {
+    border-radius: 10px;
+    background-color: #35363b;
+    border-color: #35363b;
+    padding: 1vw;
+    color: #ffffff;
+}

@@ -1,0 +1,33 @@
+form{
+    text-align: center;
+}
+
+input{
+    border-radius: 10px;
+    border-color: #35363b;
+    padding: 0.5vw;
+    margin: 1vw;
+}
+
+button{
+    border-radius: 10px;
+    background-color: #35363b;
+    border-color: #35363b;
+    padding: 1vw;
+    color: #ffffff;
+}
+
+#sub {
+    border-radius: 10px;
+    background-color: #35363b;
+    border-color: #35363b;
+    padding: 1vw;
+    color: #ffffff;
+}
+
+form > img{
+    height: 30vw;
+    width: 40vw;
+    max-width: 100%;
+    max-height: 100%;
+}

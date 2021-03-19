@@ -1,10 +1,15 @@
 html 
-    header 
+    head 
         title= "Mes transactions"
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/transactions.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
+
     body
 
         header 
-            p= nomClient
+            h1=" TP MarketPlace"
+            p= "Bonjour "+client["prenom"]+" "+client["nom"]
             form(action="/deconnexion", method="get") 
                 input(type="submit", value="Se déconnecter") 
             a(href="/accueil")= "Accueil"  
@@ -12,7 +17,7 @@ html
             a(href="/cartes")= "Modifier carte de paiement"
             if client['vendeur'] == true
                 a(href="")= "Modifier vos produits"
-        
+        h1= "Vos transactions :"
         each op in operations
             div.transac
                 h1="Date : "+op["date"]
@@ -21,3 +26,6 @@ html
                 h1="Montant : "+op["montant"]+" €" 
                 h1="Carte : "+op["carte"]
                 h1="Créditeur : "+op["crediteur"]
+        
+        footer
+            p= "Copyright © 2021 - Gallet Benjamin"

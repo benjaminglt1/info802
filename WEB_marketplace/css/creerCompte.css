@@ -1,0 +1,19 @@
+body{
+    text-align: center;
+}
+
+input{
+    border-radius: 10px;
+    border-color: #35363b;
+    padding: 0.5vw;
+    margin: 1vw;
+}
+
+
+input[type="submit"] {
+    border-radius: 10px;
+    background-color: #35363b;
+    border-color: #35363b;
+    padding: 1vw;
+    color: #ffffff;
+}

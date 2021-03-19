@@ -1,0 +1,51 @@
+input[type="submit"] {
+    border-radius: 10px;
+    background-color: #35363b;
+    border-color: #35363b;
+    padding: 1vw;
+    color: #ffffff;
+}
+
+.id{
+    text-align: center;
+    margin: auto;
+    width: 80vw;
+
+}
+
+.id > label{
+    width: 10vw;
+}
+
+.id > input{
+    border-radius: 10px;
+    border-color: #35363b;
+    padding: 0.5vw;
+    margin: 1vw
+}
+
+.mdp{
+    text-align: center;
+    margin: auto;
+    width: 80vw;
+}
+
+.mdp > label{
+    width: 50vw;
+}
+
+.mdp > input{
+    border-radius: 10px;
+    border-color: #35363b;
+    padding: 0.5vw;
+    margin: 1vw;
+}
+
+.sub{
+    text-align: center;
+}
+
+.creerCompte{
+    text-align: center;
+    color: #000000;
+}

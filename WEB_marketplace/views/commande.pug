@@ -1,19 +1,37 @@
 html 
     head 
         title= "Validation de la commande" 
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/commande.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
     
     body
-        
-        h1= nomProduit 
-        h2= "Quantité : " + qte
-        h2= "Prix Final : "+(parseInt(prix)*parseInt(qte)+parseInt(prixLivraison)) + " €"
-        h2= "Détails du prix"  
-        ul 
-            li
-                h3= "Prix des produits : " + (prix*qte) + " €"
-            li
-                h3= "Prix de la livraison : " + prixLivraison + " €"
+        header 
+            h1=" TP MarketPlace"
+            p= "Bonjour "+client["prenom"]+" "+client["nom"]
+            form(action="/deconnexion", method="get") 
+                input(type="submit", value="Se déconnecter") 
+            a(href="/accueil")= "Accueil"  
+            a(href="/transactions")= "Voir mes transactions"
+            a(href="/cartes")= "Modifier carte de paiement"
+            if client['vendeur'] == true
+                a(href="")= "Modifier vos produits"
+        h1= "Validation de la commande"
+        div.corp
+            
+            h1= nomProduit 
+            h2= "Quantité : " + qte
+            h2= "Prix Final : "+(parseInt(prix)*parseInt(qte)+parseInt(prixLivraison)) + " €"
+            h2= "Détails du prix"  
+            ul 
+                li
+                    h3= "Prix des produits : " + (prix*qte) + " €"
+                li
+                    h3= "Prix de la livraison : " + prixLivraison + " €"
 
-        form(action="/payement", method="post")
-            input(type="submit", value="Procéder au payement") 
+            form(action="/payement", method="post")
+                input(type="submit", value="Procéder au payement") 
+
+        footer
+            p= "Copyright © 2021 - Gallet Benjamin"
         

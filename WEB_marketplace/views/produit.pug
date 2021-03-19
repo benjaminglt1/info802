@@ -1,8 +1,22 @@
 html 
     head 
         title= nomProduit 
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/produit.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
     
     body
+        header 
+            h1=" TP MarketPlace"
+            p= "Bonjour "+client["prenom"]+" "+client["nom"]
+            form(action="/deconnexion", method="get") 
+                input(type="submit", value="Se déconnecter") 
+            a(href="/accueil")= "Accueil"  
+            a(href="/transactions")= "Voir mes transactions"
+            a(href="/cartes")= "Modifier carte de paiement"
+            if client['vendeur'] == true
+                a(href="")= "Modifier vos produits"
+
         form(action="/commander", method="post")
             h1= nomProduit
             p= "Ref : "+ idProduit
@@ -10,14 +24,15 @@ html
             p= "Poid unitaire : " + poidProduit + " Kg"
             p= "Prix unitaire : " + prixProduit + " €"
             label(for="qte")= "Quantité : "
-            input(type="number", value="0", name="qte", id="qte", min="1", onclick="document.getElementById('poidt').innerHTML = 'Poid total : ' + ((document.getElementById('qte').value)*"+poidProduit+")+ ' Kg';document.getElementById('prixt').innerHTML = 'Prix (sans livraison) : ' + ((document.getElementById('qte').value)*"+prixProduit+")+ ' €';")
+            input(type="number", value="0", name="qte", id="qte", min="1", onchange="document.getElementById('poidt').innerHTML = 'Poid total : ' + ((document.getElementById('qte').value)*"+poidProduit+")+ ' Kg';document.getElementById('prixt').innerHTML = 'Prix (sans livraison) : ' + ((document.getElementById('qte').value)*"+prixProduit+")+ ' €';")
             p(id="poidt")= ""
             p(id="prixt")= "" 
             
-            button(onclick="document.getElementById('calculLivraison').style.display='block';document.getElementById('sub').style.display='block';")= "Etape suivante"
-
+            button(onclick="document.getElementById('calculLivraison').style.display='block';document.getElementById('sub').style.display='inline';")= "Etape suivante"
             div(id="calculLivraison", style="display: none;")
                 label(for="distance")="Distance de livraison (en km) : "
                 input(type="number", name="distance", id="distance", min="1", value="0")  
-            input(type="submit", id="sub", value="Calculer le prix final",style="display: none;")
+                input(type="submit", id="sub", value="Calculer le prix final",style="display: none;")
              
+        footer
+            p= "Copyright © 2021 - Gallet Benjamin"

@@ -1,18 +1,27 @@
 html
     head 
         title= "Connexion" 
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/connexion.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
 
     body  
+        header
+            h1=" TP MarketPlace"
         if erreur  
             h1= erreur 
         form(action="/connexion", method="post")
-            label(for="log")= "Identifiant :"
-            input(type="text", name="log", id="log")
-            label(for="pass")= "Mot de passe :"
-            input(type="password", name="pass", id="pass")    
-            input(type="submit", value="Se connecter")
-        p= "Si vous n'avez pas de compte :"
-        a(href="/creerCompte")= "Créer un compte" 
+            div.id
+                label(for="log")= "Identifiant :"
+                input(type="text", name="log", id="log")
+            div.mdp
+                label(for="pass")= "Mot de passe :"
+                input(type="password", name="pass", id="pass")    
+            div.sub
+                input(type="submit", value="Se connecter")
+            div.creerCompte
+                p= "Si vous n'avez pas de compte : "
+                    a(href="/creerCompte")= "Créer un compte" 
 
         footer 
-            p= "&copy; 2021 - Gallet Benjamin"
+            p= "Copyright © 2021 - Gallet Benjamin"

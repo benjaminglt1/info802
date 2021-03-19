@@ -1,28 +1,46 @@
 html 
     head 
         title= "Payement"
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/payement.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
     
     body
+        header 
+            h1=" TP MarketPlace"
+            p= "Bonjour "+client["prenom"]+" "+client["nom"]
+            form(action="/deconnexion", method="get") 
+                input(type="submit", value="Se déconnecter") 
+            a(href="/accueil")= "Accueil"  
+            a(href="/transactions")= "Voir mes transactions"
+            a(href="/cartes")= "Modifier carte de paiement"
+            if client['vendeur'] == true
+                a(href="")= "Modifier vos produits"
+
         h1= "Payement"
-        h2= "Vos cartes enregistrées"
-        form(action="/payer", method="post") 
-            each carte in cartes
-                div(id=carte)
-                    input(id=carte['nom'], value=carte['nom'], type="radio", name="carte", onclick="document.getElementById('cartePerso').style.display='none';")   
-                    label(for=carte['nom'])= carte['nom']                  
-                        
+        div.f
+            h2= "Vos cartes enregistrées :"
+            form(action="/payer", method="post") 
+                each carte in cartes
+                    div.carte
+                        input(id=carte['nom'], value=carte['nom'], type="radio", name="carte", onclick="document.getElementById('cartePerso').style.display='none';")   
+                        label(for=carte['nom'])= carte['nom']                  
+                            
+                div.carte
+                    input#autre(value="autre", type="radio", name="carte",onclick="document.getElementById('cartePerso').style.display='block';")
+                    label(for="autre")= "Utiliser une autre carte"
+                div.cartePerso(id="cartePerso",style="display:none;")
+                    div
+                        label(for="numCarte")= "Numéro de carte"
+                        input(id="numCarte", type="tel", inputmode="numeric", pattern="[0-9\s]{16}", maxlength="16", placeholder="xxxx xxxx xxxx xxxx")                
+                    div    
+                        label(for="dateExpire")= "Date d'expiration"
+                        input(type="month", name="dateExpire", id="dateExpire")
+                    div
+                        label(for="cvv")= "CVV"
+                        input(id="cvv", type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")    
 
-            input#autre(value="autre", type="radio", name="carte",onclick="document.getElementById('cartePerso').style.display='block';")
-            label(for="autre")= "Utiliser une autre carte"
-            div(id="cartePerso",style="display:none;")
-            
-                label(for="numCarte")= "Numéro de carte"
-                input(id="numCarte", type="tel", inputmode="numeric", pattern="[0-9\s]{16}", maxlength="16", placeholder="xxxx xxxx xxxx xxxx")                
-                    
-                label(for="dateExpire")= "Date d'expiration"
-                input(type="month", name="dateExpire", id="dateExpire")
+                input(type="submit", value="Payer")
 
-                label(for="cvv")= "CVV"
-                input(id="cvv", type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")    
-
-            input(type="submit", value="Payer")
+        footer
+            p= "Copyright © 2021 - Gallet Benjamin"

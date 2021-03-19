@@ -1,10 +1,15 @@
 html 
-    header 
-        title= "Mes transactions"
+    head 
+        title= "Mes produits"
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/produitsVendeur.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
+
     body
 
         header 
-            p= nomClient
+            h1=" TP MarketPlace"
+            p= "Bonjour "+client["prenom"]+" "+client["nom"]
             form(action="/deconnexion", method="get") 
                 input(type="submit", value="Se déconnecter")  
             a(href="/accueil")= "Accueil" 
@@ -18,24 +23,29 @@ html
             div.prod
                 h1="Nom : "+p["nom"]
                 h1="Photo : "+p["photo"]
-                h1="Poid : "+p["poid"]
-                h1="Prix : "+p["prix"]
+                h1="Poid : "+p["poid"]+" Kg"
+                h1="Prix : "+p["prix"]+ " €"
                 form(action="/supprimerProduit/"+p['id'], method="get")
                     input(type="submit", value="Supprimer") 
 
         h1= "Ajouter un nouveau produit :"
-        form(action="/ajoutProduit", method="post")
-            label(for="nom")= "Nom du produit"
-            input#nom(type="text", name="nom") 
-
-            label(for="photo")= "Photo :"
-            input#photo(type="text", name="photo")
-
-            label(for="poid")= "Poid : "
-            input#poid(type="text", name="poid")  
-
-            label(for="prix")= "Prix : "
-            input#nom(type="text", name="prix") 
-                         
-            
-            input(type="submit", value="Ajouter le produit")
+        div.ajouterProd
+            form(action="/ajoutProduit", method="post")
+                div
+                    label(for="nom")= "Nom du produit"
+                    input#nom(type="text", name="nom") 
+                div
+                    label(for="photo")= "Photo :"
+                    input#photo(type="text", name="photo")
+                div
+                    label(for="poid")= "Poid : "
+                    input#poid(type="text", name="poid")  
+                div
+                    label(for="prix")= "Prix : "
+                    input#nom(type="text", name="prix") 
+                            
+                
+                input(type="submit", value="Ajouter le produit")
+        
+        footer
+            p= "Copyright © 2021 - Gallet Benjamin"

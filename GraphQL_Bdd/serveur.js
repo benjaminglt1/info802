@@ -1,10 +1,30 @@
+/**
+ * # Documentation du service graphQL
+ * 
+*/
+
 var express = require('express');
 var { graphqlHTTP } = require('express-graphql');
 var { buildSchema } = require('graphql');
 const firebase = require('firebase');
 
 const port = process.env.PORT || 3000;
- 
+
+
+/**
+ * ## Configuration de la bdd firebase
+ * 
+ * Toutes les informations ci-dessous sont trouvables dans le panneaux d'administration firebase
+ * 
+ * ```javascript
+ *  const conf = {
+ *      apiKey: clé de connexion a l'api firebase,
+ *      authDomain: ulr du projet firebase,
+ *      databaseURL: url de la base de données voulu,
+ *      projectId: id du projet
+ *  }
+ * ```
+ */ 
 const conf = {
     apiKey: "AIzaSyCoziNM4DIF74O5CTbGlvDArqmVohozOs8",
     authDomain: "baseinfo802.firebaseapp.com",
@@ -13,9 +33,27 @@ const conf = {
 };
 
 firebase.initializeApp(conf);
-var database = firebase.database();
 
-// Construct a schema, using GraphQL schema language
+/**
+ * ## Contruction des schema pour notre base
+ * 
+ * ```javascript
+ *  var schema = buildSchema(`{
+ *      // on met tous les schema dont on à besoin
+ *          type ... { ... }
+ * 
+ *      // On ajoute les requêtes possibles
+ *      type Query{
+ *          //get...
+ *      }  
+ * 
+ *      // On ajoute les mutations
+ *      type Mutation{
+ *          //ajouter/supprimer/modifier
+ *      }  
+ *  }`)
+ * ```
+ */
 var schema = buildSchema(`
     type produit {
         id: String
@@ -49,7 +87,20 @@ var schema = buildSchema(`
 `);
 
 
-// The root provides a resolver function for each API endpoint
+/**
+ * ## Construction des resolvers
+ * 
+ * ```javascript
+ *  var root = {
+ *      // On va definir tous les endpoint définis dans 'Query' et  'Mutation'
+ *      // Exemple :
+ *      getProduits:() => {
+ *          //on va chercher dans la bdd ce que l'on veut. Ici les produits dans la base
+ *          return firebase.database().ref('/produit')...
+ *      }
+ *  }
+ * ```
+ */
 var root = {
     getProduits:() => {
         return firebase.database().ref('/produits').once('value').then((res) => {
@@ -102,6 +153,7 @@ var root = {
         });
     },
     ajouterProduit:(arg) => {
+        // Pemet de générer une clé pour insérer des données dans la base
         var newPostKey = firebase.database().ref('/produits').push().key;
         
         var postData = {
@@ -113,7 +165,6 @@ var root = {
             vendeur: arg.vendeur
           };
                 
-          // Write the new post's data simultaneously in the posts list and the user's post list.
         var updates = {};
         updates['/produits/'+newPostKey] = postData;
         
@@ -138,7 +189,6 @@ var root = {
             vendeur: arg.vendeur
           };
                 
-          // Write the new post's data simultaneously in the posts list and the user's post list.
         var updates = {};
         updates['/utilisateurs/'+newPostKey] = postData;
         
@@ -154,6 +204,20 @@ var root = {
 };
  
 var app = express();
+
+/**
+ * ## Configuration de graphQL
+ * 
+ * ```javascript
+ *  // On spécifie le chemin d'accès à graphQL (/graphql)
+ *  // Ensuite on donne à notre application les schemas et les resolvers qui vont permettre la manipulation des données
+ *  app.use('/graphql', graphqlHTTP({
+ *      schema: schema,
+ *      rootValue: root,
+ *      graphiql: true,
+ *  }));
+ * ```
+ */
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,

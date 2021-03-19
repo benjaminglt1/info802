@@ -1,10 +1,15 @@
 html 
-    header 
+    head
         title= "Mes transactions"
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/cartes.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
+
     body
 
         header 
-            p= nomClient
+            h1=" TP MarketPlace"
+            p= "Bonjour "+client["prenom"]+" "+client["nom"]
             form(action="/deconnexion", method="get") 
                 input(type="submit", value="Se déconnecter")  
             a(href="/accueil")= "Accueil" 
@@ -24,17 +29,22 @@ html
                     input(type="submit", value="Supprimer") 
 
         h1= "Ajouter une nouvelle carte :"
-        form(action="/ajoutCarte", method="post")
-            label(for="nomCarte")= "Nom de la carte"
-            input#nomCarte(type="text", name="nomCarte") 
-
-            label(for="numCarte")= "Numéro de carte"
-            input(id="numCarte", name="numCarte", type="tel", inputmode="numeric", pattern="[0-9\s]{16}", maxlength="16", placeholder="xxxx xxxx xxxx xxxx")                
+        div.ajouterCarte
+            form(action="/ajoutCarte", method="post")
+                div
+                    label(for="nomCarte")= "Nom de la carte"
+                    input#nomCarte(type="text", name="nomCarte") 
+                div
+                    label(for="numCarte")= "Numéro de carte"
+                    input(id="numCarte", name="numCarte", type="tel", inputmode="numeric", pattern="[0-9\s]{16}", maxlength="16", placeholder="xxxx xxxx xxxx xxxx")                
+                div    
+                    label(for="dateExpire")= "Date d'expiration"
+                    input(type="month", name="dateExpire", id="dateExpire")
+                div
+                    label(for="cvv")= "CVV"
+                    input(id="cvv",, name="cvv" type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")                
                 
-            label(for="dateExpire")= "Date d'expiration"
-            input(type="month", name="dateExpire", id="dateExpire")
+                input(type="submit", value="Ajouter la carte")
 
-            label(for="cvv")= "CVV"
-            input(id="cvv",, name="cvv" type="tel", inputmode="numeric", pattern="[0-9\s]{3}", maxlength="3", placeholder="xxx")                
-            
-            input(type="submit", value="Ajouter la carte")
+        footer
+            p= "Copyright © 2021 - Gallet Benjamin"

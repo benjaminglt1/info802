@@ -1,0 +1,46 @@
+header,footer{
+    background-color: #35363b;
+    color: #ffffff;
+    text-align: center;
+    width: 100%;
+    
+}
+
+footer{
+    position:relative;
+    bottom: 0;
+}
+
+header > a {
+    text-decoration: none;
+    color: #ffffff;
+    margin: 3.5vw;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+    height: 5vw;
+}
+
+header > form > input[type="submit"] {
+    border-radius: 15px;
+    background-color: #ffffff;
+    border-color: #35363b;
+    padding: 1vw;
+}
+header > h1 {
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+}
+
+
+
+footer > p{
+    font-size: 1.5vw;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+}
+
+body,html{
+    height:100%;
+    margin: 0;
+    padding: 0;
+}

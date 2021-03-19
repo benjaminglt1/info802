@@ -1,10 +1,14 @@
 html
     head 
         title= title 
+        meta(charset='utf-8')
+        link(rel="stylesheet", href="../css/accueil.css")
+        link(rel="stylesheet", href="../css/header_footer.css")
 
     body 
         header 
-            p= nomClient
+            h1=" TP MarketPlace"
+            p= "Bonjour "+client["prenom"]+" "+client["nom"]
             form(action="/deconnexion", method="get") 
                 input(type="submit", value="Se déconnecter")  
             a(href="/accueil")= "Accueil" 
@@ -16,11 +20,11 @@ html
         h1= "Liste des produits :"
         br
         each prod in produits
-            div.produit 
-                a(href="/prod/"+prod['id'])
+            a(href="/prod/"+prod['id']) 
+                div.produit
                     img(src=prod['photo'], alt="Image du produit manquante")
                     h2= prod['nom']
-                    h2= prod['prix'] + " €"
+                    h2.prix= prod['prix'] + " €"
 
         footer
-            p= "&copy; 2021 - Gallet Benjamin"
+            p= "Copyright © 2021 - Gallet Benjamin"
