@@ -1,6 +1,6 @@
 html 
     head
-        title= "Mes transactions"
+        title= "Mes cartes"
         meta(charset='utf-8')
         link(rel="stylesheet", href="../css/cartes.css")
         link(rel="stylesheet", href="../css/header_footer.css")
@@ -16,18 +16,20 @@ html
             a(href="/transactions")= "Voir mes transactions"
             a(href="/cartes")= "Modifier carte de paiement"
             if client['vendeur'] == true
-                a(href="")= "Modifier vos produits"
+                a(href="/modifProduits")= "Modifier vos produits"
 
         h1= "Vos cartes :"
-        each c in cartes
-            div.carte
-                h1="Nom : "+c["nom"]
-                h1="Numero : "+c["numero"]
-                h1="Validité : "+c["validite"]
-                h1="CVV : "+c["cvv"]
-                form(action="/supprimerCarte/"+c['numero'], method="get")
-                    input(type="submit", value="Supprimer") 
-
+        if cartes.length > 0
+            each c in cartes
+                div.carte
+                    h1="Nom : "+c["nom"]
+                    h1="Numero : "+c["numero"]
+                    h1="Validité : "+c["validite"]
+                    h1="CVV : "+c["cvv"]
+                    form(action="/supprimerCarte/"+c['numero'], method="get")
+                        input(type="submit", value="Supprimer") 
+        else
+            h2="Vous n'avez pas encore de cartes"
         h1= "Ajouter une nouvelle carte :"
         div.ajouterCarte
             form(action="/ajoutCarte", method="post")

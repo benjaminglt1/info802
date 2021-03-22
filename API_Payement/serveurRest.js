@@ -57,6 +57,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
+
 //Pour la génération d'une chaine de caractères random
 const Str = require('@supercharge/strings');
 
@@ -239,7 +240,7 @@ app.get('/api/client/:id', (requete,reponse) => {
  * @returns {json} On retourne les clients avec le nouveau client ajouté
  */
 app.post('/api/client', (requete,reponse) => {
-    if(token.indexOf(requete.headers.token)>-1){
+    
         clients.push(requete.body);
 
         fs.writeFile('clients.json', JSON.stringify(clients), (err) => {
@@ -250,9 +251,7 @@ app.post('/api/client', (requete,reponse) => {
         });
 
         reponse.status(200).json(clients);
-    }else{
-        reponse.status(401).json({"status":"Il faut se connecter"});
-    }
+    
 });
 
 /**
@@ -380,10 +379,11 @@ app.get('/api/client/:id/voirCartes', (requete,reponse) => {
     if(token.indexOf(requete.headers.token)>-1){
         var id = requete.params.id;
         var client = clients.find(client => client.id === id);
+        
         if(client.carte.length>0){
             reponse.status(200).json(client.carte);
         }else{
-            reponse.status(200).json('{carte:"pas de carte"}')
+            reponse.status(200).json([])
         }
     }else{
         reponse.status(401).json({"status":"Il faut se connecter"});
@@ -419,7 +419,12 @@ app.get('/api/client/:id/operations', (requete,reponse) => {
     if(token.indexOf(requete.headers.token)>-1){
         var id = requete.params.id;
         var client = clients.find(client => client.id === id);
-        reponse.status(200).json(client.operations);
+        if(client.operations.length > 0){
+            reponse.status(200).json(client.operations);
+        }else{
+            reponse.status(200).json([]);
+        }
+        
     }else{
         reponse.status(401).json({"status":"Il faut se connecter"});
     }

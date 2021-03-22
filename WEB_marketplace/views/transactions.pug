@@ -16,16 +16,20 @@ html
             a(href="/transactions")= "Voir mes transactions"
             a(href="/cartes")= "Modifier carte de paiement"
             if client['vendeur'] == true
-                a(href="")= "Modifier vos produits"
+                a(href="/modifProduits")= "Modifier vos produits"
+                
         h1= "Vos transactions :"
-        each op in operations
-            div.transac
-                h1="Date : "+op["date"]
-                h1="Produit : "+op["produit"]
-                h1="Quantité : "+op["qte"]
-                h1="Montant : "+op["montant"]+" €" 
-                h1="Carte : "+op["carte"]
-                h1="Créditeur : "+op["crediteur"]
+        if operations.length > 0
+            each op in operations
+                div.transac
+                    h1="Date : "+op["date"]
+                    h1="Produit : "+op["produit"]
+                    h1="Quantité : "+op["qte"]
+                    h1="Montant : "+op["montant"]+" €" 
+                    h1="Carte : "+op["carte"]
+                    h1="Créditeur : "+op["crediteur"]
+        else 
+            h2= "Vous n'avez pas encore fait de transaction"
         
         footer
             p= "Copyright © 2021 - Gallet Benjamin"

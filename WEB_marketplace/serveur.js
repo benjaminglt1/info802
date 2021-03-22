@@ -349,17 +349,13 @@ app.post("/creer",(req, res) => {
     }`
     request(graphqlUrl, mutation).then((data) => {
         console.log(data);
-        if(!vendeur){
+        
             //ajouter si client à l'api
             axios.post(restUrl+'/client', 
             {
                 id: data['ajouterClient'],
                 carte:[],
                 operations:[]
-            },{
-                headers: {
-                token: variables.token,
-                }
             })
             .then(resultat => {
                 console.log(`statusCode: ${resultat.statusCode}`)
@@ -368,10 +364,6 @@ app.post("/creer",(req, res) => {
             .catch(error => {
                 console.error(error)
             })
-        }else{
-            //ajouter si vendeur à l'api
-            var boutique = req.body.nomBoutique
-        }
     })
 
     
